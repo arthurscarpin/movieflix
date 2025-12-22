@@ -1,0 +1,18 @@
+# General Application Settings
+spring:
+  # Application Configuration
+  application:
+    name: movieflix
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  # Flyway Migration Configuration
+  flyway:
+    enabled: true
