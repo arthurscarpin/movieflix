@@ -60,6 +60,20 @@ public class MovieService {
                 .map(MovieMapper::toMovieResponse);
     }
 
+    public List<MovieResponse> findByCategory(Long category) {
+        return repository.findMovieByCategories_Id(category)
+                .stream()
+                .map(MovieMapper::toMovieResponse)
+                .toList();
+    }
+
+    public List<MovieResponse> findByStreaming(Long streaming) {
+        return repository.findMovieByStreaming_Id(streaming)
+                .stream()
+                .map(MovieMapper::toMovieResponse)
+                .toList();
+    }
+
     public MovieResponse updateById(Long id, MovieRequest request) {
         Movie updatedMovie = MovieMapper.toMovie(request);
         updatedMovie.setId(id);

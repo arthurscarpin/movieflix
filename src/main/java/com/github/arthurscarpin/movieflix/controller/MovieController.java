@@ -35,6 +35,16 @@ public class MovieController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping(value = "/search", params = {"category", "!streaming"})
+    public ResponseEntity<List<MovieResponse>> getByCategory(@RequestParam Long category) {
+        return ResponseEntity.ok(service.findByCategory(category));
+    }
+
+    @GetMapping(value = "/search", params = {"streaming", "!category"})
+    public ResponseEntity<List<MovieResponse>> getByStreaming(@RequestParam Long streaming) {
+        return ResponseEntity.ok(service.findByStreaming(streaming));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<MovieResponse> updateById(@PathVariable Long id, @RequestBody MovieRequest request) {
         if (service.findById(id).isEmpty()) {
