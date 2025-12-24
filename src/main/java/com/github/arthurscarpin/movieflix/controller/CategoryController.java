@@ -2,8 +2,6 @@ package com.github.arthurscarpin.movieflix.controller;
 
 import com.github.arthurscarpin.movieflix.controller.request.CategoryRequest;
 import com.github.arthurscarpin.movieflix.controller.response.CategoryResponse;
-import com.github.arthurscarpin.movieflix.entity.Category;
-import com.github.arthurscarpin.movieflix.mapper.CategoryMapper;
 import com.github.arthurscarpin.movieflix.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,30 +19,35 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> postSave(@RequestBody CategoryRequest request) {
-        Category newCategory = CategoryMapper.toCategory(request);
-        Category savedCategory = service.save(newCategory);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CategoryMapper.toCategoryResponse(savedCategory));
+                .body(service.save(request));
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAll() {
-        List<CategoryResponse> categories = service.findAll()
-                .stream()
-                .map(CategoryMapper::toCategoryResponse)
-                .toList();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getById(@PathVariable Long id) {
         return service.findById(id)
-                .map(category -> ResponseEntity.ok(CategoryMapper.toCategoryResponse(category)))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateById(@PathVariable Long id, @RequestBody CategoryRequest request) {
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(service.updateById(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id)  {
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         service.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

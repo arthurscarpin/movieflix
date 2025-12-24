@@ -1,6 +1,9 @@
 package com.github.arthurscarpin.movieflix.service;
 
+import com.github.arthurscarpin.movieflix.controller.request.CategoryRequest;
+import com.github.arthurscarpin.movieflix.controller.response.CategoryResponse;
 import com.github.arthurscarpin.movieflix.entity.Category;
+import com.github.arthurscarpin.movieflix.mapper.CategoryMapper;
 import com.github.arthurscarpin.movieflix.respository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,16 +17,27 @@ public class CategoryService {
 
     private final CategoryRepository repository;
 
-    public List<Category> findAll() {
-        return repository.findAll();
+    public CategoryResponse save(CategoryRequest request) {
+        Category savedCategory = repository.save(CategoryMapper.fromCategoryRequestToCategory(request));
+        return CategoryMapper.toCategoryResponse(savedCategory);
     }
 
-    public Category save(Category category) {
-        return repository.save(category);
+    public List<CategoryResponse> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(CategoryMapper::toCategoryResponse)
+                .toList();
     }
 
-    public Optional<Category> findById(Long id) {
-        return repository.findById(id);
+    public Optional<CategoryResponse> findById(Long id) {
+        return repository.findById(id)
+                .map(CategoryMapper::toCategoryResponse);
+    }
+
+    public CategoryResponse updateById(Long id, CategoryRequest request) {
+        Category category = CategoryMapper.fromCategoryRequestToCategory(request);
+        category.setId(id);
+        return CategoryMapper.toCategoryResponse(repository.save(category));
     }
 
     public void deleteById(Long id) {
