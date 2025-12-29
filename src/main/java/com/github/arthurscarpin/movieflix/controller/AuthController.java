@@ -1,7 +1,9 @@
 package com.github.arthurscarpin.movieflix.controller;
 
+import com.github.arthurscarpin.movieflix.config.TokenConfig;
 import com.github.arthurscarpin.movieflix.controller.request.LoginRequest;
 import com.github.arthurscarpin.movieflix.controller.request.UserRequest;
+import com.github.arthurscarpin.movieflix.controller.response.LoginResponse;
 import com.github.arthurscarpin.movieflix.controller.response.UserResponse;
 import com.github.arthurscarpin.movieflix.entity.User;
 import com.github.arthurscarpin.movieflix.service.UserService;
@@ -26,6 +28,8 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final TokenConfig tokenConfig;
+
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -33,13 +37,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         UsernamePasswordAuthenticationToken userAndPassword = new UsernamePasswordAuthenticationToken(
                 request.email(),
                 request.password()
         );
         Authentication authenticate = authenticationManager.authenticate(userAndPassword);
         User user = (User) authenticate.getPrincipal();
-        return ResponseEntity.ok("User " + user.getEmail() + " logged in successfully!");
+        String token = tokenConfig.generateToken(user);
+        return ResponseEntity.ok(new LoginResponse(token));
     }
 }

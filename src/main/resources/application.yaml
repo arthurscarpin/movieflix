@@ -16,3 +16,7 @@ spring:
   # Flyway Migration Configuration
   flyway:
     enabled: true
+# Security Settings
+security:
+    jwt:
+        secret: ${JWT_SECRET}
