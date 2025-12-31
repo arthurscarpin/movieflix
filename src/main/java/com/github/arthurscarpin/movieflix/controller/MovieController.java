@@ -3,6 +3,7 @@ package com.github.arthurscarpin.movieflix.controller;
 import com.github.arthurscarpin.movieflix.controller.request.MovieRequest;
 import com.github.arthurscarpin.movieflix.controller.response.MovieResponse;
 import com.github.arthurscarpin.movieflix.service.MovieService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class MovieController {
     private final MovieService service;
 
     @PostMapping
-    public ResponseEntity<MovieResponse> save(@RequestBody MovieRequest request) {
+    public ResponseEntity<MovieResponse> save(@Valid @RequestBody MovieRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.save(request));
     }
@@ -46,7 +47,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieResponse> updateById(@PathVariable Long id, @RequestBody MovieRequest request) {
+    public ResponseEntity<MovieResponse> updateById(@Valid @PathVariable Long id, @RequestBody MovieRequest request) {
         if (service.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }

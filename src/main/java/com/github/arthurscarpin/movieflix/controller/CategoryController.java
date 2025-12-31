@@ -3,6 +3,7 @@ package com.github.arthurscarpin.movieflix.controller;
 import com.github.arthurscarpin.movieflix.controller.request.CategoryRequest;
 import com.github.arthurscarpin.movieflix.controller.response.CategoryResponse;
 import com.github.arthurscarpin.movieflix.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CategoryController {
     private final CategoryService service;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> postSave(@RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> postSave(@Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.save(request));
     }
@@ -36,7 +37,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateById(@PathVariable Long id, @RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> updateById(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
         if (service.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }

@@ -3,6 +3,7 @@ package com.github.arthurscarpin.movieflix.controller;
 import com.github.arthurscarpin.movieflix.controller.request.StreamingRequest;
 import com.github.arthurscarpin.movieflix.controller.response.StreamingResponse;
 import com.github.arthurscarpin.movieflix.service.StreamingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class StreamingController {
     private final StreamingService service;
 
     @PostMapping
-    public ResponseEntity<StreamingResponse> postSave(@RequestBody StreamingRequest request) {
+    public ResponseEntity<StreamingResponse> postSave(@Valid @RequestBody StreamingRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.save(request));
     }
@@ -36,7 +37,7 @@ public class StreamingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StreamingResponse> updateById(@PathVariable Long id, @RequestBody StreamingRequest request) {
+    public ResponseEntity<StreamingResponse> updateById(@PathVariable Long id, @Valid @RequestBody StreamingRequest request) {
         if (service.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
